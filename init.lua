@@ -21,10 +21,10 @@ end)
 
 -- Request handlers
 function handleGet(conn, headers)
-    responseHeaders = {["Content-Type"] = "text/html"}
+    local responseHeaders = {["Content-Type"] = "text/html"}
 
     file.open("index.html", "r")
-    endResponse(conn, 200, "OK", headers, file.read())
+    endResponse(conn, 200, "OK", responseHeaders, file.read())
     file.close()
 end
 
@@ -44,7 +44,7 @@ function handleBrew(conn, headers)
     tmr.delay(250000)
     gpio.write(pin, gpio.LOW)
 
-    responseHeaders = {["Content-Type"] = "message/coffeepot"}
+    local responseHeaders = {["Content-Type"] = "message/coffeepot"}
     endResponse(conn, 200, "OK", responseHeaders, "start")
 end
 
