@@ -53,7 +53,7 @@ function getHeaders(data)
     isFirst = true
     headers = {}
 
-    for _, line in ipairs(split(data, "%C+")) do    
+    for line in data:gmatch("%C+") do    
         if isFirst then
             isFirst = false
         else
@@ -76,12 +76,4 @@ function endResponse(conn, statusCode, statusMessage, headers, data)
     if data then conn:send(data) end
     
     conn:close()
-end
-
--- Utilities
-function split(data, pattern)
-    parts = {}
-    for s in data:gmatch(pattern) do table.insert(parts, s) end
-
-    return parts
 end
