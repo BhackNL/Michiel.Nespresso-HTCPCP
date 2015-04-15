@@ -7,9 +7,9 @@ gpio.write(2, gpio.LOW)
 srv = net.createServer(net.TCP)
 
 srv:listen(80, function(conn)
-    conn:on("receive", function(conn, payload)
-        local headers = getHeaders(payload)
-        local _, _, verb = payload:find("(%w+) ")
+    conn:on("receive", function(conn, data)
+        local headers = getHeaders(data)
+        local _, _, verb = data:find("(%w+) ")
     
         if verb == "GET" then
             handleGet(conn, headers)
@@ -49,11 +49,11 @@ function handleBrew(conn, headers)
 end
 
 -- HTTP utilities
-function getHeaders(payload)
+function getHeaders(data)
     isFirst = true
     headers = {}
 
-    for _, line in ipairs(split(payload, "%C+")) do    
+    for _, line in ipairs(split(data, "%C+")) do    
         if isFirst then
             isFirst = false
         else
