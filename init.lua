@@ -1,10 +1,11 @@
+tmr.delay(500000) -- Wait 500ms
 available = false
 
 -- Setup GPIO
-gpio.mode(1, gpio.OUTPUT)
+gpio.mode(1, gpio.OUTPUT) -- Espresso
 gpio.write(1, gpio.LOW)
 
-gpio.mode(2, gpio.OUTPUT)
+gpio.mode(2, gpio.OUTPUT) -- Lungo
 gpio.write(2, gpio.LOW)
 
 gpio.mode(3, gpio.INT, gpio.PULLUP)
