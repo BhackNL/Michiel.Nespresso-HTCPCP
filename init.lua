@@ -4,6 +4,19 @@ gpio.write(1, gpio.LOW)
 gpio.mode(2, gpio.OUTPUT)
 gpio.write(2, gpio.LOW)
 
+ready = false
+gpio.mode(4, gpio.INT, gpio.PULLUP)
+gpio.trig(4, "down", function(level) -- Falling edge means LED turns on
+    tmr.stop(0)
+
+	tmr.alarm(0, 1125000, 0, function() -- Assuming the LED has a frequency of 1Hz
+		gpio.mode(4, gpio.OUTPUT)
+		gpio.write(4, gpio.LOW)
+		
+		ready = true
+	end)
+end)
+
 srv = net.createServer(net.TCP)
 
 srv:listen(80, function(conn)
