@@ -20,7 +20,6 @@ end)
 
 -- Setup TCP server
 srv = net.createServer(net.TCP)
-
 srv:listen(80, function(conn)
     conn:on("receive", function(conn, data)
         local headers = getHeaders(data)
