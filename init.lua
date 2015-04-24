@@ -43,7 +43,7 @@ function handleGet(conn, headers)
 end
 
 function handleBrew(conn, headers)
-    if not ready then
+    if not available then
         endResponse(conn, 503, "Service Unavailable", nil, "The coffee pot is not available right now.")
         return
     end
