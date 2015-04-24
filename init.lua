@@ -43,8 +43,6 @@ function handleGet(conn, headers)
 end
 
 function handleBrew(conn, headers)
-    pin = 0
-    
     if not ready then
         endResponse(conn, 503, "Service Unavailable", nil, "The coffee pot is not available right now.")
         return
@@ -55,6 +53,7 @@ function handleBrew(conn, headers)
         return
     end
     
+    pin = 0
     if headers["X-Coffee-Type"] == "espresso" then
         pin = 1
     elseif headers["X-Coffee-Type"] == "lungo" then
