@@ -2,12 +2,6 @@ tmr.delay(500000) -- Wait 500ms
 available = true -- If the coffee pot does a "warm" boot, it's immediately available
 
 -- Setup GPIO
-gpio.mode(1, gpio.OUTPUT) -- Espresso
-gpio.write(1, gpio.LOW)
-
-gpio.mode(2, gpio.OUTPUT) -- Lungo
-gpio.write(2, gpio.LOW)
-
 gpio.mode(3, gpio.INT, gpio.PULLUP)
 gpio.trig(3, "up", function(level) -- Rising edge means LED turns off
     available = false
@@ -17,6 +11,12 @@ gpio.trig(3, "up", function(level) -- Rising edge means LED turns off
         available = true
     end)
 end)
+
+gpio.mode(1, gpio.OUTPUT) -- Espresso
+gpio.write(1, gpio.LOW)
+
+gpio.mode(2, gpio.OUTPUT) -- Lungo
+gpio.write(2, gpio.LOW)
 
 -- Setup TCP server
 srv = net.createServer(net.TCP)
