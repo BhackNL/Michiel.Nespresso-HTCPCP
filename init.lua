@@ -1,5 +1,5 @@
 tmr.delay(500000) -- Wait 500ms
-available = false
+available = true -- If the coffee pot does a "warm" boot, it's immediately available
 
 -- Setup GPIO
 gpio.mode(1, gpio.OUTPUT) -- Espresso
