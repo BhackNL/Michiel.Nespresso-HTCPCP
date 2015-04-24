@@ -1,22 +1,23 @@
+available = false
+
+-- Setup GPIO
 gpio.mode(1, gpio.OUTPUT)
 gpio.write(1, gpio.LOW)
 
 gpio.mode(2, gpio.OUTPUT)
 gpio.write(2, gpio.LOW)
 
-ready = false
-gpio.mode(4, gpio.INT, gpio.PULLUP)
-gpio.trig(4, "down", function(level) -- Falling edge means LED turns on
+gpio.mode(3, gpio.INT, gpio.PULLUP)
+gpio.trig(3, "up", function(level) -- Rising edge means LED turns off
+    available = false
     tmr.stop(0)
     
-    tmr.alarm(0, 1125000, 0, function() -- Assuming the LED has a frequency of 1Hz
-    	gpio.mode(4, gpio.OUTPUT)
-    	gpio.write(4, gpio.LOW)
-    	
-    	ready = true
+    tmr.alarm(0, 1250000, 0, function() -- Assuming the LED has a frequency of 1Hz
+        available = true
     end)
 end)
 
+-- Setup TCP server
 srv = net.createServer(net.TCP)
 
 srv:listen(80, function(conn)
@@ -45,7 +46,7 @@ function handleBrew(conn, headers)
     pin = 0
     
     if not ready then
-        endResponse(conn, 503, "Service Unavailable", nil, "The coffee pot is still warming up.")
+        endResponse(conn, 503, "Service Unavailable", nil, "The coffee pot is not ready.")
         return
     end
     
