@@ -44,6 +44,16 @@ end
 function handleBrew(conn, headers)
     pin = 0
     
+    if not ready then
+        endResponse(conn, 503, "Service Unavailable", nil, "The coffee pot is still warming up.")
+        return
+    end
+    
+    if headers["Accept-Additions"] then
+        endResponse(conn, 406, "Not Acceptable", nil, "This coffee pot does not allow additions.")
+        return
+    end
+    
     if headers["X-Coffee-Type"] == "espresso" then
         pin = 1
     elseif headers["X-Coffee-Type"] == "lungo" then
@@ -52,7 +62,7 @@ function handleBrew(conn, headers)
         endResponse(conn, 400, "Bad Request", nil, "Please provide a valid X-Coffee-Type (espresso, lungo).")
         return
     end
-
+    
     gpio.write(pin, gpio.HIGH)
     tmr.delay(250000)
     gpio.write(pin, gpio.LOW)
