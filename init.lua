@@ -46,7 +46,7 @@ function handleBrew(conn, headers)
     pin = 0
     
     if not ready then
-        endResponse(conn, 503, "Service Unavailable", nil, "The coffee pot is not ready.")
+        endResponse(conn, 503, "Service Unavailable", nil, "The coffee pot is not available right now.")
         return
     end
     
