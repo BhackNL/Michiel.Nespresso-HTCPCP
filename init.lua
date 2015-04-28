@@ -2,21 +2,23 @@ tmr.delay(500000) -- Wait 500ms
 available = true -- If the coffee pot does a "warm" boot, it's immediately available
 
 -- Setup GPIO
-gpio.mode(3, gpio.INT, gpio.PULLUP)
-gpio.trig(3, "up", function(level) -- Rising edge means LED turns off
+gpio.mode(5, gpio.INT, gpio.PULLUP)
+gpio.trig(5, "up", function(level) -- Rising edge means LED turns off
+    print("led turned off")
     available = false
     tmr.stop(0)
     
     tmr.alarm(0, 1250000, 0, function() -- Assuming the LED has a frequency of 1Hz
+        print("alarm!")
         available = true
     end)
 end)
 
 gpio.mode(1, gpio.OUTPUT) -- Espresso
-gpio.write(1, gpio.LOW)
+gpio.write(1, gpio.HIGH)
 
 gpio.mode(2, gpio.OUTPUT) -- Lungo
-gpio.write(2, gpio.LOW)
+gpio.write(2, gpio.HIGH)
 
 -- Setup TCP server
 srv = net.createServer(net.TCP)
@@ -49,7 +51,7 @@ function handleBrew(conn, headers)
     end
     
     if headers["Accept-Additions"] then
-        endResponse(conn, 406, "Not Acceptable", nil, "This coffee pot does not allow additions.")
+        endResponse(conn, 406, "Not Acceptable", nil, "This coffee pot does not accept additions.")
         return
     end
     
@@ -59,13 +61,13 @@ function handleBrew(conn, headers)
     elseif headers["X-Coffee-Type"] == "lungo" then
         pin = 2
     else
-        endResponse(conn, 400, "Bad Request", nil, "Please provide a valid X-Coffee-Type (espresso, lungo).")
+        endResponse(conn, 400, "Bad Request", nil, "Please provide a valid X-Coffee-Type header: (espresso|lungo).")
         return
     end
     
-    gpio.write(pin, gpio.HIGH)
-    tmr.delay(250000)
     gpio.write(pin, gpio.LOW)
+    tmr.delay(100000)
+    gpio.write(pin, gpio.HIGH)
 
     local responseHeaders = {["Content-Type"] = "message/coffeepot"}
     endResponse(conn, 200, "OK", responseHeaders, "start")
