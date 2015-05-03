@@ -4,12 +4,10 @@ available = true -- If the coffee pot does a "warm" boot, it's immediately avail
 -- Setup GPIO
 gpio.mode(5, gpio.INT, gpio.PULLUP)
 gpio.trig(5, "up", function(level) -- Rising edge means LED turns off
-    print("led turned off")
     available = false
     tmr.stop(0)
     
-    tmr.alarm(0, 1250000, 0, function() -- Assuming the LED has a frequency of 1Hz
-        print("alarm!")
+    tmr.alarm(0, 1250, 0, function() -- Assuming the LED has a frequency of 1Hz
         available = true
     end)
 end)
@@ -66,7 +64,7 @@ function handleBrew(conn, headers)
     end
     
     gpio.write(pin, gpio.LOW)
-    tmr.delay(100000)
+    tmr.delay(200000)
     gpio.write(pin, gpio.HIGH)
 
     local responseHeaders = {["Content-Type"] = "message/coffeepot"}
