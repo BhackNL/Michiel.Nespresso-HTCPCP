@@ -1,4 +1,4 @@
-tmr.delay(500000) -- Wait 500ms
+tmr.delay(500000)
 available = true -- If the coffee pot does a "warm" boot, it's immediately available
 
 -- Setup GPIO
@@ -7,7 +7,7 @@ gpio.trig(5, "up", function(level) -- Rising edge means LED turns off
     available = false
     tmr.stop(0)
     
-    tmr.alarm(0, 1250, 0, function() -- Assuming the LED has a frequency of 1Hz
+    tmr.alarm(0, 1250, 0, function()
         available = true
     end)
 end)
@@ -54,20 +54,23 @@ function handleBrew(conn, headers)
     end
     
     pin = 0
-    if headers["X-Coffee-Type"] == "espresso" then
+    if headers["X-Coffee-Variation"] == "espresso" then
         pin = 1
-    elseif headers["X-Coffee-Type"] == "lungo" then
+    elseif headers["X-Coffee-Variation"] == "lungo" then
         pin = 2
     else
-        endResponse(conn, 400, "Bad Request", nil, "Please provide a valid X-Coffee-Type header: (espresso|lungo).")
+        endResponse(conn, 400, "Bad Request", nil, "Please provide a valid X-Coffee-Variation header: (espresso|lungo).")
         return
     end
+
+    print("Brewing some " .. headers["X-Coffee-Variation"])
     
     gpio.write(pin, gpio.LOW)
     tmr.delay(200000)
     gpio.write(pin, gpio.HIGH)
 
-    local responseHeaders = {["Content-Type"] = "message/coffeepot"}
+    local responseHeaders = {["Content-Type"] = "message/coffeepot",
+                             ["Safe"] = "yes"}
     endResponse(conn, 200, "OK", responseHeaders, "start")
 end
 
