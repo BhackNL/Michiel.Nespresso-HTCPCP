@@ -59,7 +59,7 @@ function handleBrew(conn, headers)
     elseif headers["X-Coffee-Variation"] == "lungo" then
         pin = 2
     else
-        endResponse(conn, 400, "Bad Request", nil, "Please provide a valid X-Coffee-Variation header: (espresso|lungo).")
+        endResponse(conn, 400, "Bad Request", nil, "Please provide a valid X-Coffee-Variation header (espresso | lungo).")
         return
     end
 
