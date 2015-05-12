@@ -2,13 +2,27 @@
 <html>
     <head>
         <title>HTCPCP-enabled Nespresso machine</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+        <script>
+        function brewCoffee(button) {                
+            $.ajax("/", {
+                method: "BREW",
+                headers: {"X-Coffee-Variation": button.id},
+                error: function(jqXHR) { alert(jqXHR.responseText); }
+            });
+        }
+        </script>
     </head>
     <body>
-        <h1>Welcome!</h1>
-        <p>Want some coffee? Send me a BREW request like this:</p>
+        <p>Want some coffee? Send me a BREW HTTP request:</p>
         <p style="font-family: monospace;">
-            BREW / HTTP/1.0<br />
-            X-Coffee-Type: lungo
+        BREW / HTTP/1.0<br />
+        X-Coffee-Variation: espresso
         </p>
+        <p>Or use the buttons below to brew some coffee:</p>
+        <form>
+            <input type="button" id="espresso" value="Espresso" onclick="brewCoffee(this)" />
+            <input type="button" id="lungo" value="Lungo" onclick="brewCoffee(this)" />
+        </form>
     </body>
 </html>
