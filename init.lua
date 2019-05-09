@@ -82,7 +82,7 @@ function handleBrew(conn, headers)
 
     local responseHeaders = {["Content-Type"] = "message/coffeepot",
                              ["Safe"] = "yes"}
-    endResponse(conn, 200, "OK", responseHeaders, "start")
+    endResponse(conn, 418, "I'm a teapot", responseHeaders, "start")
 
     gpio.write(pin, gpio.LOW)
     tmr.delay(500000)
